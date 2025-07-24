@@ -7,6 +7,7 @@ function App() {
   const [selectedVideo, setSelectedVideo] = useState(null)
   const [searchQuery, setSearchQuery] = useState('trailer')
   const [loading, setLoading] = useState(false)
+  const [scrollPosition, setScrollPosition] = useState(0)
 
   // Tu API Key de YouTube (reemplaza con tu propia API key)
   const API_KEY = 'AIzaSyAKon6-P8tnSxgKgP-Bxxk7wUuN0KEqbx4'
@@ -58,6 +59,21 @@ function App() {
       fetchVideos(searchQuery)
     } else {
       alert('Por favor, agrega tu API Key de YouTube en el código')
+    }
+  }
+
+  const scrollCarousel = (direction) => {
+    const carousel = document.querySelector('.video-carousel')
+    const cardWidth = 335 // Ancho de cada card (320px) + gap (15px)
+    const visibleCards = Math.floor(window.innerWidth / cardWidth) // Cards visibles
+    const scrollAmount = cardWidth * Math.max(1, visibleCards - 1) // Mover cards visibles - 1
+    
+    if (direction === 'left') {
+      carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' })
+      setScrollPosition(prev => Math.max(0, prev - scrollAmount))
+    } else {
+      carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' })
+      setScrollPosition(prev => prev + scrollAmount)
     }
   }
 
@@ -122,24 +138,42 @@ function App() {
               </ul>
             </div>
           ) : (
-            <div className="video-grid">
-              {videos.map((video) => (
-                <div
-                  key={video.id.videoId}
-                  className={`video-card ${selectedVideo?.id.videoId === video.id.videoId ? 'active' : ''}`}
-                  onClick={() => setSelectedVideo(video)}
-                >
-                  <img
-                    src={video.snippet.thumbnails.medium.url}
-                    alt={video.snippet.title}
-                    className="video-thumbnail"
-                  />
-                  <div className="video-info">
-                    <h4 className="video-title">{video.snippet.title}</h4>
-                    <p className="video-channel">{video.snippet.channelTitle}</p>
+            <div className="carousel-container">
+              <button 
+                className="carousel-btn carousel-btn-left"
+                onClick={() => scrollCarousel('left')}
+                aria-label="Mover carrusel a la izquierda"
+              >
+                <span>‹</span>
+              </button>
+              
+              <div className="video-carousel">
+                {videos.map((video) => (
+                  <div
+                    key={video.id.videoId}
+                    className={`video-card ${selectedVideo?.id.videoId === video.id.videoId ? 'active' : ''}`}
+                    onClick={() => setSelectedVideo(video)}
+                  >
+                    <img
+                      src={video.snippet.thumbnails.medium.url}
+                      alt={video.snippet.title}
+                      className="video-thumbnail"
+                    />
+                    <div className="video-info">
+                      <h4 className="video-title">{video.snippet.title}</h4>
+                      <p className="video-channel">{video.snippet.channelTitle}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+              
+              <button 
+                className="carousel-btn carousel-btn-right"
+                onClick={() => scrollCarousel('right')}
+                aria-label="Mover carrusel a la derecha"
+              >
+                <span>›</span>
+              </button>
             </div>
           )}
         </div>
