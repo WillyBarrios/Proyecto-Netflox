@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import YouTube from 'react-youtube'
+import NetflixIntro from './components/NetflixIntro'
 import './App.css'
 
 function App() {
@@ -7,7 +8,10 @@ function App() {
   const [selectedVideo, setSelectedVideo] = useState(null)
   const [searchQuery, setSearchQuery] = useState('trailer')
   const [loading, setLoading] = useState(false)
-  const [scrollPosition, setScrollPosition] = useState(0)
+  const [modalVideo, setModalVideo] = useState(null)
+  const [videoStats, setVideoStats] = useState(null)
+  const [showIntro, setShowIntro] = useState(false)
+  const [pendingVideo, setPendingVideo] = useState(null)
 
   // Tu API Key de YouTube (reemplaza con tu propia API key)
   const API_KEY = 'AIzaSyAKon6-P8tnSxgKgP-Bxxk7wUuN0KEqbx4'
@@ -62,6 +66,50 @@ function App() {
     }
   }
 
+  const fetchVideoStats = async (videoId) => {
+    try {
+      const response = await fetch(
+        `https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet&id=${videoId}&key=${API_KEY}`
+      )
+      const data = await response.json()
+      
+      if (data.items && data.items.length > 0) {
+        return data.items[0]
+      }
+      return null
+    } catch (error) {
+      console.error('Error fetching video stats:', error)
+      return null
+    }
+  }
+
+  const handlePlayClick = async (video, e) => {
+    e.stopPropagation() // Evita que se ejecute el onClick del card
+    
+    const stats = await fetchVideoStats(video.id.videoId)
+    setVideoStats(stats)
+    setModalVideo(video)
+  }
+
+  const playVideoWithIntro = (video) => {
+    setPendingVideo(video)
+    setShowIntro(true)
+    closeModal()
+  }
+
+  const onIntroComplete = () => {
+    setShowIntro(false)
+    if (pendingVideo) {
+      setSelectedVideo(pendingVideo)
+      setPendingVideo(null)
+    }
+  }
+
+  const closeModal = () => {
+    setModalVideo(null)
+    setVideoStats(null)
+  }
+
   const scrollCarousel = (direction) => {
     const carousel = document.querySelector('.video-carousel')
     const cardWidth = 335 // Ancho de cada card (320px) + gap (15px)
@@ -70,10 +118,8 @@ function App() {
     
     if (direction === 'left') {
       carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' })
-      setScrollPosition(prev => Math.max(0, prev - scrollAmount))
     } else {
       carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' })
-      setScrollPosition(prev => prev + scrollAmount)
     }
   }
 
@@ -154,11 +200,20 @@ function App() {
                     className={`video-card ${selectedVideo?.id.videoId === video.id.videoId ? 'active' : ''}`}
                     onClick={() => setSelectedVideo(video)}
                   >
-                    <img
-                      src={video.snippet.thumbnails.medium.url}
-                      alt={video.snippet.title}
-                      className="video-thumbnail"
-                    />
+                    <div className="video-thumbnail-container">
+                      <img
+                        src={video.snippet.thumbnails.medium.url}
+                        alt={video.snippet.title}
+                        className="video-thumbnail"
+                      />
+                      <button 
+                        className="play-button"
+                        onClick={(e) => handlePlayClick(video, e)}
+                        aria-label="Reproducir video"
+                      >
+                        <span>▶</span>
+                      </button>
+                    </div>
                     <div className="video-info">
                       <h4 className="video-title">{video.snippet.title}</h4>
                       <p className="video-channel">{video.snippet.channelTitle}</p>
@@ -179,6 +234,74 @@ function App() {
         </div>
       </div>
 
+      {/* Modal de Video */}
+      {modalVideo && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={closeModal}>
+              ×
+            </button>
+            
+            <div className="modal-video-info">
+              <div className="modal-thumbnail-container">
+                <img
+                  src={modalVideo.snippet.thumbnails.high?.url || modalVideo.snippet.thumbnails.medium.url}
+                  alt={modalVideo.snippet.title}
+                  className="modal-thumbnail"
+                />
+                <div className="modal-play-overlay">
+                  <button 
+                    className="modal-play-button"
+                    onClick={() => playVideoWithIntro(modalVideo)}
+                  >
+                    <span>▶</span>
+                  </button>
+                </div>
+              </div>
+              
+              <div className="modal-details">
+                <h2 className="modal-title">{modalVideo.snippet.title}</h2>
+                <p className="modal-channel">
+                  <strong>Canal:</strong> {modalVideo.snippet.channelTitle}
+                </p>
+                <p className="modal-date">
+                  <strong>Fecha de publicación:</strong> {new Date(modalVideo.snippet.publishedAt).toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </p>
+                
+                {videoStats && (
+                  <div className="modal-stats">
+                    {videoStats.statistics.viewCount && (
+                      <p className="modal-stat">
+                        <strong>Visualizaciones:</strong> {parseInt(videoStats.statistics.viewCount).toLocaleString('es-ES')}
+                      </p>
+                    )}
+                    {videoStats.statistics.likeCount && (
+                      <p className="modal-stat">
+                        <strong>Likes:</strong> {parseInt(videoStats.statistics.likeCount).toLocaleString('es-ES')}
+                      </p>
+                    )}
+                    {videoStats.statistics.commentCount && (
+                      <p className="modal-stat">
+                        <strong>Comentarios:</strong> {parseInt(videoStats.statistics.commentCount).toLocaleString('es-ES')}
+                      </p>
+                    )}
+                  </div>
+                )}
+                
+                <div className="modal-description">
+                  <h4>Descripción:</h4>
+                  <p>{modalVideo.snippet.description.substring(0, 300)}...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Instrucciones para API Key */}
       {(!API_KEY || API_KEY === 'TU_API_KEY_AQUI') && (
         <div className="api-warning">
@@ -190,6 +313,11 @@ function App() {
             <li>Reemplazar 'TU_API_KEY_AQUI' en el código con tu API key real</li>
           </ol>
         </div>
+      )}
+
+      {/* Netflix Intro */}
+      {showIntro && (
+        <NetflixIntro onComplete={onIntroComplete} />
       )}
     </div>
   )
