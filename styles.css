@@ -37,7 +37,7 @@
 
     .hero iframe {
       position: absolute;
-      top: 0;
+      top: -10%;
       left: 0;
       width: 100vw;
       height: 100%;
@@ -68,7 +68,6 @@
 
     .hero-content h2 {
       font-size: 30px;
-      opacity: 0.9;
     }
 
     .hero-content h1 {
@@ -80,9 +79,9 @@
       font-size: 25px;
       margin-bottom: 20px;
       line-height: 1.4;
-      opacity: 0.9;
     }
 
+    /*botones de reproducir y más información */
     .buttons button {
       background: white;
       color: black;
@@ -94,7 +93,8 @@
       cursor: pointer;
       border-radius: 4px;
     }
-
+    
+    /*al pasar el mouse se vuelve un poco más oscuro*/
     .buttons button:hover {
       background: #e6e6e6;
     }
