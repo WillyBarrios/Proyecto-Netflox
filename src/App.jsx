@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import YouTube from 'react-youtube'
 import NetflixIntro from './components/NetflixIntro'
 import './App.css'
@@ -12,6 +12,11 @@ function App() {
   const [videoStats, setVideoStats] = useState(null)
   const [showIntro, setShowIntro] = useState(false)
   const [pendingVideo, setPendingVideo] = useState(null)
+  const [playFullscreen, setPlayFullscreen] = useState(false)
+  const [fullscreenVideo, setFullscreenVideo] = useState(null)
+
+  // Referencia al reproductor YouTube
+  const playerRef = useRef(null)
 
   // Tu API Key de YouTube (reemplaza con tu propia API key)
   const API_KEY = 'AIzaSyAKon6-P8tnSxgKgP-Bxxk7wUuN0KEqbx4'
@@ -100,7 +105,7 @@ function App() {
   const onIntroComplete = () => {
     setShowIntro(false)
     if (pendingVideo) {
-      setSelectedVideo(pendingVideo)
+      setFullscreenVideo(pendingVideo)
       setPendingVideo(null)
     }
   }
@@ -109,6 +114,25 @@ function App() {
     setModalVideo(null)
     setVideoStats(null)
   }
+
+  const closeFullscreenPlayer = () => {
+    setFullscreenVideo(null)
+    setPlayFullscreen(false)
+  }
+
+  // Efecto para manejar la tecla ESC en pantalla completa
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.key === 'Escape' && fullscreenVideo) {
+        closeFullscreenPlayer()
+      }
+    }
+
+    if (fullscreenVideo) {
+      document.addEventListener('keydown', handleKeyPress)
+      return () => document.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [fullscreenVideo])
 
   const scrollCarousel = (direction) => {
     const carousel = document.querySelector('.video-carousel')
@@ -127,8 +151,53 @@ function App() {
     height: '400',
     width: '100%',
     playerVars: {
-      autoplay: 0,
+      autoplay: playFullscreen ? 1 : 0,
+      controls: 1,
+      showinfo: 0,
+      modestbranding: 1,
+      rel: 0,
     },
+  }
+
+  const fullscreenOpts = {
+    height: '100%',
+    width: '100%',
+    playerVars: {
+      autoplay: 1,
+      controls: 1,
+      showinfo: 0,
+      modestbranding: 1,
+      rel: 0,
+      fs: 1,
+    },
+  }
+
+  // Función que se ejecuta cuando el reproductor está listo
+  const onPlayerReady = (event) => {
+    playerRef.current = event.target
+    if (playFullscreen) {
+      // Pequeño delay para asegurar que el video esté listo
+      setTimeout(() => {
+        try {
+          // Intenta poner en pantalla completa
+          if (playerRef.current && playerRef.current.getIframe()) {
+            const iframe = playerRef.current.getIframe()
+            if (iframe.requestFullscreen) {
+              iframe.requestFullscreen()
+            } else if (iframe.webkitRequestFullscreen) {
+              iframe.webkitRequestFullscreen()
+            } else if (iframe.mozRequestFullScreen) {
+              iframe.mozRequestFullScreen()
+            } else if (iframe.msRequestFullscreen) {
+              iframe.msRequestFullscreen()
+            }
+          }
+          setPlayFullscreen(false) // Reset el estado
+        } catch (error) {
+          console.log('Error al intentar pantalla completa:', error)
+        }
+      }, 1000)
+    }
   }
 
   return (
@@ -161,6 +230,7 @@ function App() {
               <YouTube
                 videoId={selectedVideo.id.videoId}
                 opts={opts}
+                onReady={onPlayerReady}
               />
             </div>
             <p className="featured-description">
@@ -318,6 +388,26 @@ function App() {
       {/* Netflix Intro */}
       {showIntro && (
         <NetflixIntro onComplete={onIntroComplete} />
+      )}
+
+      {/* Reproductor en Pantalla Completa */}
+      {fullscreenVideo && (
+        <div className="fullscreen-player">
+          <button 
+            className="fullscreen-close"
+            onClick={closeFullscreenPlayer}
+            aria-label="Cerrar reproductor"
+          >
+            ✕
+          </button>
+          <div className="fullscreen-video-container">
+            <YouTube
+              videoId={fullscreenVideo.id.videoId}
+              opts={fullscreenOpts}
+              onEnd={closeFullscreenPlayer}
+            />
+          </div>
+        </div>
       )}
     </div>
   )
