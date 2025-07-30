@@ -1,12 +1,11 @@
-import Nabvar from "./components/Navbar"
+import Navbar from "./components/Navbar";
 
 function App() {
-
   return (
-    <>
-      <Nabvar />
-    </>
-  )
+    <div className="bg-white min-h-screen">
+      <Navbar />
+    </div>
+  );
 }
 
-export default App
+export default App;
