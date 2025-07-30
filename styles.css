@@ -1,141 +1,106 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  font-family: Arial, sans-serif;
+  color: white;
+  overflow-x: hidden;
+}
 
-    html, body {
-      width: 100%;
-      height: 100%;
-      background-color: black;
-      font-family: Arial, sans-serif;
-      color: white;
-      overflow-x: hidden;
-    }
+/*titulo SERIES superior*/
+.section-title {
+  background-color: #222;
+  padding: 20px 30px;
+  position: sticky; /* Hace que el elemento se pegue a la parte superior */
+  top: 0; /* Lo pega en la parte superior */
+  z-index: 101; /* Asegura que esté por encima de otros elementos al desplazarse */
+}
 
-    /*titulo SERIES superior*/
-  .section-title {
-      background-color: #222;
-      padding: 20px 30px;
-      position: sticky; /* Hace que el elemento se pegue a la parte superior */
-      top: 0; /* Lo pega en la parte superior */
-      z-index: 101; /* Asegura que esté por encima de otros elementos al desplazarse */
-    }
+.section-title h1 {
+  font-size: clamp(20px, 5vw, 32px);
+}
 
-    .section-title h1 {
-      font-size: 32px;
-    }
+/*tamaño del video en la pantalla*/
+.hero {
+  position: relative;
+  width: 100vw;
+  aspect-ratio: 16 / 9; /* Mantiene la proporción del video */
+  overflow: hidden;
+  background-color: black;
+}
 
-    /*tamaño del video en la pantalla*/
-    .hero {
-      position: relative;
-      width: 100vw;
-      height: 110vh;
-      overflow: hidden;
-    }
+.hero iframe {
+  position: absolute;
+  top: -10%;
+ left: 0;
+  width: 100vw;
+  height: 100%;
+  border: none;
+  z-index: 1;
+}
 
-    .hero iframe {
-      position: absolute;
-      top: -10%;
-      left: 0;
-      width: 100vw;
-      height: 100%;
-      border: none;
-      z-index: 1;
-    }
+/*el degradado entre el video y las letras*/
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.9) 30%, transparent 80%);
+  z-index: 2;
+}
 
-    /*el degradado entre el video y las letras*/
-    .hero-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100%;
-      background: linear-gradient(to right, rgba(0, 0, 0, 0.9) 30%, transparent 80%);
-      z-index: 2;
-    }
+/*titulo de serie y la descripción*/
+.hero-content {
+  position: absolute;
+  top: 50%;
+  left: 5vw;
+  transform: translateY(-50%);
+  z-index: 3;
+  max-width: 90vw;
+}
 
-    /*titulo de serie y la descripción*/
-    .hero-content {
-      position: absolute;
-      top: 50%;
-      left: 50px;
-      transform: translateY(-50%);
-      z-index: 3;
-      max-width: 600px;
-    }
+.hero-content h2 {
+  font-size: clamp(16px, 3vw, 30px); /*para que sea responsivo*/
+}
 
-    .hero-content h2 {
-      font-size: 30px;
-    }
+.hero-content h1 {
+  font-size: clamp(32px, 8vw, 100px); /*para que sea responsivo*/
+  margin: 10px 0;
+}
 
-    .hero-content h1 {
-      font-size: 100px;
-      margin: 10px 0;
-    }
+.hero-content p {
+  font-size: clamp(14px, 2.5vw, 25px); /*para que sea responsivo*/  
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
 
-    .hero-content p {
-      font-size: 25px;
-      margin-bottom: 20px;
-      line-height: 1.4;
-    }
+/*botones de reproducir y más información */
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 
-    /*botones de reproducir y más información */
-    .buttons button {
-      background: white;
-      color: black;
-      font-size: 20px;
-      font-weight: bold;
-      border: none;
-      padding: 10px 35px;
-      margin-right: 20px;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-    
-    /*al pasar el mouse se vuelve un poco más oscuro*/
-    .buttons button:hover {
-      background: #e6e6e6;
-    }
+.buttons button {
+  background: white;
+  color: black;
+  font-size: clamp(14px, 2vw, 20px); /*para que sea responsivo*/
+  font-weight: bold;
+  border: none;
+  padding: 10px 35px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-right: 0; /* Eliminamos margen para que gap funcione bien */
+}
 
-    .series-premiadas {
-      padding: 30px;
-      position: relative;
-      z-index: 100;
-      background-color: black;
-    }
-
-    .series-premiadas h2 {
-      margin-bottom: 20px;
-    }
-
-    .card-container {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .card {
-      width: 120px;
-      height: 160px;
-      background-color: #444;
-      border-radius: 5px;
-    }
-
-    @media (max-width: 768px) {
-      .hero-content h1 {
-        font-size: 32px;
-      }
-      .hero-content p {
-        font-size: 14px;
-      }
-      .hero-content {
-        left: 20px;
-        max-width: 90%;
-      }
-      .card {
-        width: 100px;
-        height: 140px;
-      }
-    }
+/*al pasar el mouse se vuelve un poco más oscuro*/
+.buttons button:hover {
+  background: #e6e6e6;
+}
