@@ -79,9 +79,9 @@ function Navbar() {
   return (
     <>
       {/* La barra de navegación ahora es 'fixed' para que se quede fija en la parte superior. */}
-      <nav className="m-2 p-2 flex justify-between items-center bg-black text-white rounded-3xl fixed top-0 inset-x-0 z-40">
+      <nav className="w-full h-16 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent text-white fixed top-0 left-0 right-0 z-50 px-4 md:px-12">
         {/* Lado izquierdo: Hamburguesa en móvil, Logo y links en desktop */}
-        <div className="flex items-center space-x-5">
+        <div className="flex items-center space-x-8">
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
@@ -91,14 +91,14 @@ function Navbar() {
               <FaBars size={20} />
             </button>
           </div>
-          <div className="hidden md:flex items-center space-x-5">
+          <div className="hidden md:flex items-center space-x-8">
             <a href="#">
-              <img className="h-12" src={netflixLogo} alt="Netflix Logo" />
+              <img className="h-8" src={netflixLogo} alt="Netflix Logo" />
             </a>
-            <ul className="flex space-x-4 ">
+            <ul className="flex space-x-6 text-sm font-medium">
               {itemsnav.map((item) => (
                 <li key={item.text}>
-                  <a className="hover:text-gray-300" href={item.href}>
+                  <a className="hover:text-gray-300 transition-colors duration-200" href={item.href}>
                     {item.text}
                   </a>
                 </li>
@@ -110,21 +110,21 @@ function Navbar() {
         {/* Logo Centrado (solo visible en móvil) */}
         <div className="md:hidden">
           <a href="#">
-            <img className="h-12" src={netflixLogo} alt="Netflix Logo" />
+            <img className="h-8" src={netflixLogo} alt="Netflix Logo" />
           </a>
         </div>
 
         {/* Lado derecho: Iconos de búsqueda y usuario (siempre visibles) */}
-        <div className="flex items-center space-x-5">
+        <div className="flex items-center space-x-4">
           {isSearchVisible ? (
             <form
               onSubmit={handleSearch}
-              className="flex items-center bg-gray-800 rounded-md"
+              className="flex items-center bg-black/60 border border-gray-600 rounded-sm"
             >
               <input
                 type="text"
-                placeholder="Buscar..."
-                className="bg-transparent text-white px-3 py-1 rounded-md focus:outline-none"
+                placeholder="Títulos, personas, géneros"
+                className="bg-transparent text-white px-4 py-2 text-sm focus:outline-none w-64"
                 autoFocus
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -134,7 +134,7 @@ function Navbar() {
                 aria-label="Buscar"
                 className="p-2 hover:text-gray-300"
               >
-                <FaSearch size={20} />
+                <FaSearch size={16} />
               </button>
               <button
                 type="button"
@@ -142,24 +142,24 @@ function Navbar() {
                 aria-label="Cerrar búsqueda"
                 className="p-2 hover:text-gray-300"
               >
-                <FaTimes size={20} />
+                <FaTimes size={16} />
               </button>
             </form>
           ) : (
             <button
               onClick={toggleSearch}
               aria-label="Abrir búsqueda"
-              className="p-2 hover:text-gray-300"
+              className="p-2 hover:text-gray-300 transition-colors duration-200"
             >
-              <FaSearch size={20} />
+              <FaSearch size={18} />
             </button>
           )}
           {/*Icono usuario (siempre visible)*/}
           <button
             aria-label="Perfil de usuario"
-            className="p-2 hover:text-gray-300"
+            className="p-1 hover:text-gray-300 transition-colors duration-200"
           >
-            <FaUserAstronaut size={20} />
+            <FaUserAstronaut size={24} />
           </button>
         </div>
       </nav>
@@ -190,7 +190,7 @@ function Navbar() {
       )}
 
       {/* --- Contenido Principal --- */}
-      <main className="pt-24">
+      <main className="pt-16">
         {" "}
         {/* Padding superior para que el contenido no quede debajo de la nav */}
         {isLoading && (
