@@ -1,18 +1,24 @@
 /*REDES SOCIALES*/
 *{
   margin: 0;
-  padding: 0;
+  padding: 0%;
   box-sizing: border-box;
+}
+
+.footer {
+    background-color: #E50914;
+    border-top:  2px solid red;
+    position: relative;
+    width: 100%;
+    bottom: 0;
+    color: white;
+    font-size: 16px;
+    padding: 25px;
 }
 
 .container {
   width: 100%;
   background: #d81f26;
-}
-
-.box-redes-sociales h2 {
-  color: white;
-  font-weight: 700;
 }
 
 .box-redes-sociales a {
@@ -24,17 +30,11 @@
 
 .box-redes-sociales {
   display: flex;
-  padding: 40px;
-  flex-direction: row;
-}
-
-a p {
-  display: inline-block;
-}
-
-.icono {
+  justify-content: space-between;
+  width: 175px;
   font-size: 20px;
-  margin-right: 13px;
+  margin-bottom: 5%;
+
 }
 
 .social {
@@ -44,31 +44,16 @@ a p {
 
 .box-redes-sociales a:hover {
   opacity: 0.8;
-  background-color: #d81f26;
+  color: #221f1f;
 }
 
-/*MÁS INFORMACIÓ*/
+/*MÁS INFORMACIÓN*/
 
-/* Archivo - App.css */
-
-body {
-    margin: 0;
-    padding: 0;
-    height: 1000px;
-}
 
 .App {
     color: #228b22;
     text-align: left;
+    margin: 0%;
 }
 
-.footer {
-    background-color: #E50914;
-    border-top:  2px solid red;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-    color: white;
-    font-size: 16px;
-    padding-left: 3%;
-}
+
