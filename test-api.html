@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test API YouTube</title>
+</head>
+<body>
+    <h1>Test de API de YouTube</h1>
+    <button onclick="testAPI()">Probar API</button>
+    <div id="results"></div>
+
+    <script>
+        const API_KEY = 'AIzaSyAKon6-P8tnSxgKgP-Bxxk7wUuN0KEqbx4';
+        
+        async function testAPI() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = 'Buscando...';
+            
+            try {
+                const response = await fetch(
+                    `https://www.googleapis.com/youtube/v3/search?part=snippet&q=netflix series&key=${API_KEY}&maxResults=5&type=video`
+                );
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error.message || "Error al buscar videos");
+                }
+                
+                const data = await response.json();
+                console.log('API Response:', data);
+                
+                resultsDiv.innerHTML = `
+                    <h3>Resultados encontrados: ${data.items?.length || 0}</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

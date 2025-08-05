@@ -9,7 +9,6 @@ function Series() {
   const [currentSearchTerm, setCurrentSearchTerm] = useState('netflix series');
   const [loading, setLoading] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
   
   // Estados para el modal de más información
   const [modalVideo, setModalVideo] = useState(null);
@@ -18,8 +17,8 @@ function Series() {
   // Referencia al reproductor YouTube
   const playerRef = useRef(null);
 
-  // API Key de YouTube (la misma que en App.jsx)
-  const API_KEY = 'AIzaSyAKon6-P8tnSxgKgP-Bxxk7wUuN0KEqbx4';
+  // API Key de YouTube (la misma que en Navbar.jsx)
+  const API_KEY = 'AIzaSyAGy5yIve5DxKf2uV2vOwIm7sXQZIrX69c';
 
   const fetchSeries = async (query = 'netflix series') => {
     setLoading(true);
@@ -55,38 +54,6 @@ function Series() {
     }
   };
 
-  // Función para obtener resultados de búsqueda desde el navbar
-  const fetchSearchResults = async (query) => {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query.trim()}&key=${API_KEY}&maxResults=20&type=video`
-      );
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error.message || "Error al buscar videos");
-      }
-      const data = await response.json();
-      console.log("Resultados de búsqueda recibidos en Series.jsx:", data.items);
-      
-      // Actualizar los resultados de búsqueda
-      setSearchResults(data.items || []);
-      setSeries(data.items || []);
-      
-      if (data.items && data.items.length > 0) {
-        setFeaturedSeries(data.items[0]);
-      }
-      
-      console.log("Series.jsx - Búsqueda completada:", query);
-      console.log("Series.jsx - Número de resultados:", data.items?.length || 0);
-      
-    } catch (err) {
-      console.error("Error en Series.jsx al obtener resultados:", err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     // Cargar series al inicializar el componente
     if (API_KEY && API_KEY !== 'TU_API_KEY_AQUI') {
@@ -96,18 +63,34 @@ function Series() {
 
   // useEffect para escuchar eventos de búsqueda desde el navbar
   useEffect(() => {
+    console.log("🎬 Series.jsx - Configurando listener para navbarSearch");
+    
     const handleSearchEvent = (event) => {
-      const { query } = event.detail;
-      console.log("Series.jsx - Evento de búsqueda recibido:", query);
+      const { query, results } = event.detail;
+      console.log("🎬 Series.jsx - Evento de búsqueda recibido:", query);
+      console.log("🎬 Series.jsx - Resultados recibidos:", results?.length || 0);
+      console.log("🎬 Series.jsx - Datos completos:", results);
+      
+      // Actualizar directamente con los resultados del navbar
+      setSeries(results || []);
+      
+      if (results && results.length > 0) {
+        setFeaturedSeries(results[0]);
+        console.log("🎬 Series.jsx - Featured series actualizada:", results[0].snippet.title);
+      }
+      
+      // Actualizar el término de búsqueda actual
       setCurrentSearchTerm(query);
-      fetchSearchResults(query);
+      console.log("🎬 Series.jsx - Estado actualizado completamente");
     };
 
     // Escuchar el evento personalizado de búsqueda
     window.addEventListener('navbarSearch', handleSearchEvent);
+    console.log("🎬 Series.jsx - Event listener configurado");
 
     // Cleanup del event listener
     return () => {
+      console.log("🎬 Series.jsx - Limpiando event listener");
       window.removeEventListener('navbarSearch', handleSearchEvent);
     };
   }, []); // Solo se ejecuta una vez al montar el componente

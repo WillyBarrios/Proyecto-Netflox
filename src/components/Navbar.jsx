@@ -17,7 +17,7 @@ function Navbar() {
 
   // --- Lógica y estado de la búsqueda ---
   const [isLoading, setIsLoading] = useState(false);
-  const API_KEY = "AIzaSyAKon6-P8tnSxgKgP-Bxxk7wUuN0KEqbx4"
+  const API_KEY = "AIzaSyAGy5yIve5DxKf2uV2vOwIm7sXQZIrX69c"
 
   // *Función para alternar la visibilidad de la barra de búsqueda
   const toggleSearch = () => {
@@ -27,31 +27,44 @@ function Navbar() {
   // *Función para manejar la búsqueda
   const handleSearch = async (e) => {
     e.preventDefault(); // Evita que la página se recargue
-    if (!query.trim()) return;
+    console.log("🔍 Iniciando búsqueda con query:", query.trim());
+    
+    if (!query.trim()) {
+      console.log("❌ Query vacío, abortando búsqueda");
+      return;
+    }
 
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query.trim()}&key=${API_KEY}&maxResults=20&type=video`
-      );
+      const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query.trim()}&key=${API_KEY}&maxResults=20&type=video`;
+      console.log("🌐 URL de búsqueda:", url);
+      
+      const response = await fetch(url);
+      console.log("📡 Respuesta recibida, status:", response.status);
+      
       if (!response.ok) {
         const errorData = await response.json();
+        console.error("❌ Error en respuesta de API:", errorData);
         throw new Error(errorData.error.message || "Error al buscar videos");
       }
+      
       const data = await response.json();
-      console.log("Búsqueda realizada con éxito:", query.trim());
-      console.log("Resultados encontrados:", data.items?.length || 0);
+      console.log("✅ Búsqueda realizada con éxito:", query.trim());
+      console.log("📊 Resultados encontrados:", data.items?.length || 0);
+      console.log("📝 Datos completos:", data);
 
       // Emitir evento personalizado para que Series.jsx pueda escucharlo
       const searchEvent = new CustomEvent('navbarSearch', {
         detail: { query: query.trim(), results: data.items }
       });
+      console.log("📢 Emitiendo evento navbarSearch:", searchEvent.detail);
       window.dispatchEvent(searchEvent);
 
     } catch (err) {
-      console.error("Error en la búsqueda:", err.message);
+      console.error("💥 Error en la búsqueda:", err.message);
     } finally {
       setIsLoading(false);
+      console.log("🏁 Búsqueda finalizada");
     }
   };
 

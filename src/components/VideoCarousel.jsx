@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import YouTube from 'react-youtube'
 import NetflixIntro from './NetflixIntro'
 
@@ -9,11 +9,13 @@ function VideoCarousel({ videos, loading, API_KEY }) {
   const [pendingVideo, setPendingVideo] = useState(null)
   const [playFullscreen, setPlayFullscreen] = useState(false)
   const [fullscreenVideo, setFullscreenVideo] = useState(null)
+  const [videosWithStats, setVideosWithStats] = useState([])
+  const [loadingStats, setLoadingStats] = useState(false)
 
   // Referencia al reproductor YouTube
   const playerRef = useRef(null)
 
-  const fetchVideoStats = async (videoId) => {
+  const fetchVideoStats = useCallback(async (videoId) => {
     try {
       const response = await fetch(
         `https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet&id=${videoId}&key=${API_KEY}`
@@ -28,6 +30,155 @@ function VideoCarousel({ videos, loading, API_KEY }) {
       console.error('Error fetching video stats:', error)
       return null
     }
+  }, [API_KEY])
+
+  // Función para obtener estadísticas de todos los videos
+  const fetchAllVideoStats = useCallback(async () => {
+    if (!videos.length) return
+
+    setLoadingStats(true)
+    console.log('Obteniendo estadísticas para', videos.length, 'videos...')
+
+    try {
+      const videosWithStatsTemp = []
+      
+      // Procesar videos en lotes para no sobrecargar la API
+      const batchSize = 5
+      for (let i = 0; i < videos.length; i += batchSize) {
+        const batch = videos.slice(i, i + batchSize)
+        const batchPromises = batch.map(async (video) => {
+          const stats = await fetchVideoStats(video.id.videoId)
+          return { ...video, stats }
+        })
+        
+        const batchResults = await Promise.all(batchPromises)
+        videosWithStatsTemp.push(...batchResults)
+        
+        // Pequeña pausa entre lotes para evitar rate limiting
+        await new Promise(resolve => setTimeout(resolve, 100))
+      }
+
+      setVideosWithStats(videosWithStatsTemp)
+      console.log('Estadísticas obtenidas para', videosWithStatsTemp.length, 'videos')
+    } catch (error) {
+      console.error('Error fetching all video stats:', error)
+    } finally {
+      setLoadingStats(false)
+    }
+  }, [videos, fetchVideoStats])
+
+  // Memoizar las listas de videos para evitar recálculos innecesarios
+  const videosByViews = useMemo(() => {
+    return videosWithStats
+      .filter(video => video.stats && video.stats.statistics.viewCount)
+      .sort((a, b) => parseInt(b.stats.statistics.viewCount) - parseInt(a.stats.statistics.viewCount))
+      .slice(0, 10)
+  }, [videosWithStats])
+
+  const videosByLikes = useMemo(() => {
+    return videosWithStats
+      .filter(video => video.stats && video.stats.statistics.likeCount)
+      .sort((a, b) => parseInt(b.stats.statistics.likeCount) - parseInt(a.stats.statistics.likeCount))
+      .slice(0, 10)
+  }, [videosWithStats])
+
+  const videosByComments = useMemo(() => {
+    return videosWithStats
+      .filter(video => video.stats && video.stats.statistics.commentCount)
+      .sort((a, b) => parseInt(b.stats.statistics.commentCount) - parseInt(a.stats.statistics.commentCount))
+      .slice(0, 10)
+  }, [videosWithStats])
+
+  // Obtener estadísticas cuando lleguen nuevos videos (solo una vez por cambio de videos)
+  useEffect(() => {
+    if (videos.length > 0) {
+      // Limpiar estadísticas anteriores
+      setVideosWithStats([])
+      fetchAllVideoStats()
+    }
+  }, [videos, fetchAllVideoStats])
+
+  // Componente reutilizable para cada carrusel
+  const CarouselSection = ({ title, videoList, carouselId }) => {
+    const scrollCarousel = (direction) => {
+      const carousel = document.querySelector(`#${carouselId}`)
+      const cardWidth = 335 // Ancho de cada card (320px) + gap (15px)
+      const visibleCards = Math.floor(window.innerWidth / cardWidth)
+      const scrollAmount = cardWidth * Math.max(1, visibleCards - 1)
+      
+      if (direction === 'left') {
+        carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' })
+      } else {
+        carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' })
+      }
+    }
+
+    if (!videoList.length) return null
+
+    return (
+      <div className="video-section">
+        <h3 className="section-title">{title}</h3>
+        <div className="carousel-container">
+          <button 
+            className="carousel-btn carousel-btn-left"
+            onClick={() => scrollCarousel('left')}
+            aria-label="Mover carrusel a la izquierda"
+          >
+            <span>‹</span>
+          </button>
+          
+          <div className="video-carousel" id={carouselId}>
+            {videoList.map((video) => (
+              <div
+                key={`${carouselId}-${video.id.videoId}`}
+                className="video-card"
+              >
+                <div className="video-thumbnail-container">
+                  <img
+                    src={video.snippet.thumbnails.medium.url}
+                    alt={video.snippet.title}
+                    className="video-thumbnail"
+                  />
+                  <button 
+                    className="play-button"
+                    onClick={(e) => handlePlayClick(video, e)}
+                    aria-label="Reproducir video"
+                  >
+                    <span>▶</span>
+                  </button>
+                  {/* Mostrar estadística relevante */}
+                  {video.stats && (
+                    <div className="video-stat-badge">
+                      {carouselId === 'likes-carousel' && video.stats.statistics.likeCount && (
+                        <span>👍 {parseInt(video.stats.statistics.likeCount).toLocaleString('es-ES')}</span>
+                      )}
+                      {carouselId === 'views-carousel' && video.stats.statistics.viewCount && (
+                        <span>👁 {parseInt(video.stats.statistics.viewCount).toLocaleString('es-ES')}</span>
+                      )}
+                      {carouselId === 'comments-carousel' && video.stats.statistics.commentCount && (
+                        <span>💬 {parseInt(video.stats.statistics.commentCount).toLocaleString('es-ES')}</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+                <div className="video-info">
+                  <h4 className="video-title">{video.snippet.title}</h4>
+                  <p className="video-channel">{video.snippet.channelTitle}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <button 
+            className="carousel-btn carousel-btn-right"
+            onClick={() => scrollCarousel('right')}
+            aria-label="Mover carrusel a la derecha"
+          >
+            <span>›</span>
+          </button>
+        </div>
+      </div>
+    )
   }
 
   const handlePlayClick = async (video, e) => {
@@ -76,19 +227,6 @@ function VideoCarousel({ videos, loading, API_KEY }) {
     }
   }, [fullscreenVideo])
 
-  const scrollCarousel = (direction) => {
-    const carousel = document.querySelector('.video-carousel')
-    const cardWidth = 335 // Ancho de cada card (320px) + gap (15px)
-    const visibleCards = Math.floor(window.innerWidth / cardWidth) // Cards visibles
-    const scrollAmount = cardWidth * Math.max(1, visibleCards - 1) // Mover cards visibles - 1
-    
-    if (direction === 'left') {
-      carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' })
-    } else {
-      carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' })
-    }
-  }
-
   const fullscreenOpts = {
     height: '100%',
     width: '100%',
@@ -133,7 +271,9 @@ function VideoCarousel({ videos, loading, API_KEY }) {
 
   return (
     <>
-      {/* Lista de Videos */}
+      {/* Múltiples Carruseles */}
+      
+      {/* Carrusel Principal - Todos los Videos */}
       <div className="video-section">
         <h3 className="section-title">Videos Disponibles</h3>
         {loading ? (
@@ -148,53 +288,43 @@ function VideoCarousel({ videos, loading, API_KEY }) {
             </ul>
           </div>
         ) : (
-          <div className="carousel-container">
-            <button 
-              className="carousel-btn carousel-btn-left"
-              onClick={() => scrollCarousel('left')}
-              aria-label="Mover carrusel a la izquierda"
-            >
-              <span>‹</span>
-            </button>
-            
-            <div className="video-carousel">
-              {videos.map((video) => (
-                <div
-                  key={video.id.videoId}
-                  className="video-card"
-                >
-                  <div className="video-thumbnail-container">
-                    <img
-                      src={video.snippet.thumbnails.medium.url}
-                      alt={video.snippet.title}
-                      className="video-thumbnail"
-                    />
-                    <button 
-                      className="play-button"
-                      onClick={(e) => handlePlayClick(video, e)}
-                      aria-label="Reproducir video"
-                    >
-                      <span>▶</span>
-                    </button>
-                  </div>
-                  <div className="video-info">
-                    <h4 className="video-title">{video.snippet.title}</h4>
-                    <p className="video-channel">{video.snippet.channelTitle}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            <button 
-              className="carousel-btn carousel-btn-right"
-              onClick={() => scrollCarousel('right')}
-              aria-label="Mover carrusel a la derecha"
-            >
-              <span>›</span>
-            </button>
-          </div>
+          <CarouselSection 
+            title="Todos los Videos" 
+            videoList={videos} 
+            carouselId="main-carousel" 
+          />
         )}
       </div>
+
+      {/* Estado de carga de estadísticas */}
+      {loadingStats && (
+        <div className="loading">
+          Obteniendo estadísticas de videos...
+        </div>
+      )}
+
+      {/* Carruseles ordenados por estadísticas */}
+      {!loadingStats && videosWithStats.length > 0 && (
+        <>
+          <CarouselSection 
+            title="Videos con Más Reproducciones" 
+            videoList={videosByViews} 
+            carouselId="views-carousel" 
+          />
+          
+          <CarouselSection 
+            title="Videos con Más Likes" 
+            videoList={videosByLikes} 
+            carouselId="likes-carousel" 
+          />
+          
+          <CarouselSection 
+            title="Videos con Más Comentarios" 
+            videoList={videosByComments} 
+            carouselId="comments-carousel" 
+          />
+        </>
+      )}
 
       {/* Modal de Video */}
       {modalVideo && (

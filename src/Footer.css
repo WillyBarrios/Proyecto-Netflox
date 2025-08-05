@@ -1,59 +1,85 @@
-/*REDES SOCIALES*/
-*{
-  margin: 0;
-  padding: 0%;
-  box-sizing: border-box;
-}
-
+/*FOOTER STYLES*/
 .footer {
-    background-color: #E50914;
-    border-top:  2px solid red;
-    position: relative;
+    background-color: #141414;
+    border-top: 1px solid #333;
     width: 100%;
-    bottom: 0;
-    color: white;
+    color: #999;
+    font-size: 14px;
+    padding: 40px 0;
+    margin-top: 50px;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 50px;
+}
+
+.social-section {
+    margin-bottom: 30px;
+}
+
+.social-title {
+    color: #fff;
     font-size: 16px;
-    padding: 25px;
-}
-
-.container {
-  width: 100%;
-  background: #d81f26;
-}
-
-.box-redes-sociales a {
-  color: white;
-  text-decoration: none;
-  font-weight: 600;
-  margin-top: 10px;
+    margin-bottom: 15px;
+    font-weight: 400;
 }
 
 .box-redes-sociales {
-  display: flex;
-  justify-content: space-between;
-  width: 175px;
-  font-size: 20px;
-  margin-bottom: 5%;
-
+    display: flex;
+    gap: 20px;
+    align-items: center;
 }
 
-.social {
-  display: flex;
-  text-align: center;
+.box-redes-sociales a {
+    color: #999;
+    text-decoration: none;
+    font-size: 18px;
+    transition: color 0.3s ease;
 }
 
 .box-redes-sociales a:hover {
-  opacity: 0.8;
-  color: #221f1f;
+    color: #fff;
 }
 
-/*MÁS INFORMACIÓN*/
+.footer-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    margin-bottom: 30px;
+}
 
+.footer-column h4 {
+    color: #fff;
+    font-size: 14px;
+    margin-bottom: 15px;
+    font-weight: 400;
+}
 
-.App {
-    color: #228b22;
-    text-align: left;
-    margin: 0%;
+.footer-column p,
+.footer-column a {
+    color: #999;
+    font-size: 13px;
+    line-height: 1.6;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.footer-column a:hover {
+    color: #fff;
+}
+
+.footer-bottom {
+    border-top: 1px solid #333;
+    padding-top: 20px;
+    text-align: center;
+}
+
+.footer-bottom p {
+    color: #999;
+    font-size: 12px;
 }
 
 
