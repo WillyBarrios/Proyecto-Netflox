@@ -1,6 +1,756 @@
-#root {
-  max-width: 1280px;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #141414;
+  color: white;
+  overflow-x: hidden;
+}
+
+.netflix-clone {
+  min-height: 100vh;
+  background-color: #141414;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-content {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #e50914;
+  letter-spacing: 2px;
+}
+
+.search-form {
+  display: flex;
+  gap: 10px;
+}
+
+.search-input {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 14px;
+  min-width: 250px;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.search-button {
+  padding: 10px 20px;
+  background-color: #e50914;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #f40612;
+  transform: scale(1.05);
+}
+
+/* Main Content */
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Featured Video */
+.featured-video {
+  margin-bottom: 40px;
+}
+
+.featured-title {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.video-player {
+  margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.featured-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 700px;
+}
+
+/* Video Section */
+.video-section {
+  margin-top: 40px;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.loading {
   text-align: center;
+  font-size: 1.2rem;
+  padding: 40px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.no-videos {
+  text-align: center;
+  padding: 40px;
+  background-color: rgba(229, 9, 20, 0.1);
+  border: 1px solid rgba(229, 9, 20, 0.3);
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.no-videos p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #e50914;
+}
+
+.no-videos ul {
+  text-align: left;
+  max-width: 500px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.no-videos li {
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+/* Carousel Container */
+.carousel-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+}
+
+.carousel-container::before,
+.carousel-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.carousel-container::before {
+  left: 0;
+  background: linear-gradient(to right, #141414, transparent);
+}
+
+.carousel-container::after {
+  right: 0;
+  background: linear-gradient(to left, #141414, transparent);
+}
+
+.video-carousel {
+  display: flex;
+  gap: 15px;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  padding: 15px 80px;
+  flex: 1;
+}
+
+/* Carousel Navigation Buttons */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 0.8;
+}
+
+.carousel-btn:hover {
+  background-color: rgba(0, 0, 0, 0.95);
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
+}
+
+.carousel-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.carousel-btn span {
+  color: white;
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-btn-left {
+  left: 10px;
+}
+
+.carousel-btn-right {
+  right: 10px;
+}
+
+.video-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  width: 320px;
+  height: 240px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.video-card:hover {
+  transform: scale(1.05);
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.video-card.active {
+  border-color: #e50914;
+  transform: scale(1.02);
+}
+
+.video-thumbnail-container {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+}
+
+.video-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* Play Button */
+.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.video-card:hover .play-button {
+  opacity: 1;
+}
+
+.play-button:hover {
+  background-color: #e50914;
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.play-button span {
+  color: white;
+  font-size: 18px;
+  margin-left: 2px;
+}
+
+.video-info {
+  padding: 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.video-title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.video-channel {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* API Warning */
+.api-warning {
+  background-color: rgba(229, 9, 20, 0.1);
+  border: 2px solid #e50914;
+  border-radius: 8px;
+  padding: 30px;
+  margin: 40px 0;
+  text-align: center;
+}
+
+.api-warning h3 {
+  color: #e50914;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+.api-warning p {
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+.api-warning ol {
+  text-align: left;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.api-warning li {
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.api-warning a {
+  color: #e50914;
+  text-decoration: underline;
+}
+
+.api-warning a:hover {
+  color: #f40612;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background-color: #141414;
+  border-radius: 12px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1001;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  background-color: #e50914;
+  transform: scale(1.1);
+}
+
+.modal-video-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-thumbnail-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+}
+
+.modal-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-play-button {
+  width: 80px;
+  height: 80px;
+  background-color: rgba(229, 9, 20, 0.9);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.modal-play-button:hover {
+  background-color: #e50914;
+  transform: scale(1.1);
+}
+
+.modal-play-button span {
+  color: white;
+  font-size: 28px;
+  margin-left: 4px;
+}
+
+.modal-details {
+  padding: 30px;
+}
+
+.modal-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  line-height: 1.3;
+  color: white;
+}
+
+.modal-channel,
+.modal-date {
+  font-size: 1rem;
+  margin-bottom: 12px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.modal-stats {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.modal-stat {
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.modal-stat:last-child {
+  margin-bottom: 0;
+}
+
+.modal-description {
+  margin-top: 20px;
+}
+
+.modal-description h4 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.modal-description p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Reproductor en Pantalla Completa */
+.fullscreen-player {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.fullscreen-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  border: none;
+  color: white;
+  font-size: 24px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10001;
+}
+
+.fullscreen-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.fullscreen-video-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fullscreen-video-container iframe {
+  width: 100vw !important;
+  height: 100vh !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .video-card {
+    width: 280px;
+    height: 220px;
+  }
+  
+  .video-thumbnail-container {
+    height: 140px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .logo {
+    font-size: 1.5rem;
+  }
+  
+  .search-input {
+    min-width: 200px;
+  }
+  
+  .featured-title {
+    font-size: 2rem;
+  }
+  
+  .video-carousel {
+    padding: 15px 60px;
+  }
+  
+  .carousel-btn {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .carousel-btn span {
+    font-size: 22px;
+  }
+  
+  .video-card {
+    width: 240px;
+    height: 200px;
+  }
+  
+  .video-thumbnail-container {
+    height: 120px;
+  }
+  
+  .play-button {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .play-button span {
+    font-size: 14px;
+  }
+  
+  .main-content {
+    padding: 0 15px;
+  }
+  
+  .modal-content {
+    margin: 10px;
+    max-width: calc(100vw - 20px);
+  }
+  
+  .modal-thumbnail-container {
+    height: 200px;
+  }
+  
+  .modal-details {
+    padding: 20px;
+  }
+  
+  .modal-title {
+    font-size: 1.4rem;
+  }
+  
+  .modal-play-button {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .modal-play-button span {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-form {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .search-input {
+    min-width: 100%;
+  }
+  
+  .video-carousel {
+    padding: 15px 40px;
+  }
+  
+  .carousel-btn {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .carousel-btn span {
+    font-size: 20px;
+  }
+  
+  .video-card {
+    width: 200px;
+    height: 180px;
+  }
+  
+  .video-thumbnail-container {
+    height: 100px;
+  }
+  
+  .play-button {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .play-button span {
+    font-size: 12px;
+  }
+  
+  .featured-title {
+    font-size: 1.5rem;
+  }
+  
+  .modal-overlay {
+    padding: 5px;
+  }
+  
+  .modal-thumbnail-container {
+    height: 150px;
+  }
+  
+  .modal-details {
+    padding: 15px;
+  }
+  
+  .modal-title {
+    font-size: 1.2rem;
+  }
+  
+  .modal-play-button {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .modal-play-button span {
+    font-size: 16px;
+  }
 }
