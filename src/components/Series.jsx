@@ -6,8 +6,7 @@ import "./Series.css";
 function Series() {
   const [series, setSeries] = useState([]);
   const [featuredSeries, setFeaturedSeries] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [currentSearchTerm, setCurrentSearchTerm] = useState('netflix series');
+  const [currentSearchTerm] = useState('netflix series');
   const [loading, setLoading] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   
@@ -60,7 +59,7 @@ function Series() {
     if (API_KEY && API_KEY !== 'TU_API_KEY_AQUI') {
       fetchSeries(currentSearchTerm);
     }
-  }, [currentSearchTerm]);
+  }, []);
 
   // Función para obtener estadísticas del video
   const fetchVideoStats = async (videoId) => {
@@ -80,13 +79,7 @@ function Series() {
     }
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      setCurrentSearchTerm(searchQuery);
-      setSearchQuery('');
-    }
-  };
+  // La función de búsqueda ha sido eliminada
 
   const handlePlayClick = () => {
     if (featuredSeries) {
@@ -152,28 +145,14 @@ function Series() {
 
   return (
     <div className="series-container">
-      {/* Header con logo y búsqueda */}
+      {/* Header simplificado */}
       <div className="series-header">
         <div className="header-left">
-          <h1 className="netflix-logo">NETFLIX CLONE</h1>
           <div className="section-title">
             <h2>Series</h2>
             <p className="current-search">Mostrando: {currentSearchTerm}</p>
           </div>
         </div>
-        
-        <form onSubmit={handleSearch} className="series-search-form">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Buscar series..."
-            className="series-search-input"
-          />
-          <button type="submit" className="series-search-button">
-            Buscar
-          </button>
-        </form>
       </div>
 
       {/* Hero Section */}

@@ -102,7 +102,7 @@ function VideoCarousel({ videos, loading, API_KEY }) {
     },
   }
 
-  // Función que se ejecuta cuando el reproductor está listo (sin usar por ahora)
+  // Función que se ejecuta cuando el reproductor está listo 
   // eslint-disable-next-line no-unused-vars
   const onPlayerReady = (event) => {
     playerRef.current = event.target

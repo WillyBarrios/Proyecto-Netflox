@@ -64,7 +64,7 @@ function Navbar() {
   const [videos, setVideos] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
+  const API_KEY = "AIzaSyAKon6-P8tnSxgKgP-Bxxk7wUuN0KEqbx4"
 
   // *Función para alternar la visibilidad de la barra de búsqueda
   const toggleSearch = () => {
