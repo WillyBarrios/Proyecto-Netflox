@@ -9,7 +9,6 @@ const Footer = () => (
         <>
             <div className='container'>
                 <div className='box-redes-sociales'>
-                    <h2></h2>
                     <a href={link} className='social'><FaFacebookF className='icono' /><p></p></a>
                     <a href={link} className='social'><FaTwitter className='icono' /><p></p></a>
                     <a href={link} className='social'><FaInstagram className='icono' /><p></p></a>
