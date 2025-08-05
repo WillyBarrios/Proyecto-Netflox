@@ -1,0 +1,74 @@
+/*REDES SOCIALES*/
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  background: #d81f26;
+}
+
+.box-redes-sociales h2 {
+  color: white;
+  font-weight: 700;
+}
+
+.box-redes-sociales a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.box-redes-sociales {
+  display: flex;
+  padding: 40px;
+  flex-direction: row;
+}
+
+a p {
+  display: inline-block;
+}
+
+.icono {
+  font-size: 20px;
+  margin-right: 13px;
+}
+
+.social {
+  display: flex;
+  text-align: center;
+}
+
+.box-redes-sociales a:hover {
+  opacity: 0.8;
+  background-color: #d81f26;
+}
+
+/*MÁS INFORMACIÓ*/
+
+/* Archivo - App.css */
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 1000px;
+}
+
+.App {
+    color: #228b22;
+    text-align: left;
+}
+
+.footer {
+    background-color: #E50914;
+    border-top:  2px solid red;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    color: white;
+    font-size: 16px;
+    padding-left: 3%;
+}
