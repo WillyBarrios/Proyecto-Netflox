@@ -1,0 +1,4 @@
+/* Importar los estilos del login desde style.css */
+@import url('../style.css');
+
+/* Estilos específicos para el componente Login si necesitas agregar algo adicional */
