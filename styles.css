@@ -1,0 +1,53 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.container {
+
+    display: flex;
+    /*hace uso del flexbox para distribuir sus elementos*/
+    flex-direction: column;
+    /* organiza los elementos en una columna*/
+    height: 100vh;
+    /*ocupa toda la altura del viewport (es decir toda la pantalla del navegador)*/
+}
+
+
+/* estilos de pie de página*/
+footer {
+    background-color: #000000;
+    /*color gris o oscuro*/
+    color: white;
+    /* texto color blanco*/
+    padding: 10px;
+    /* espacio interno*/
+    text-align: left;
+    /*centra el texto*/
+}
+
+.social-icons {
+    display: flex;
+    justify-content: left;
+    /* Centra los iconos horizontalmente */
+    gap: 15px;
+    /* Espacio entre los iconos */
+}
+
+.social-icons a {
+    color: #E50914;
+    /* Color de los iconos */
+    font-size: 20px;
+    /* Tamaño de los iconos */
+}
+
+.social-icons a:hover {
+    color: #FFFFFF;
+    /* Color al pasar el ratón por encima */
+}
+
+        .container {
+      font-family: 'Bebas Neue', Arial, Helvetica, sans-serif;
+    }

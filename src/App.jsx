@@ -1,3 +1,4 @@
+
 import Series from './components/series'
 import './App.css'
 
@@ -5,7 +6,14 @@ function App() {
   // Tu API Key de YouTube (reemplaza con tu propia API key)
   const API_KEY = 'AIzaSyAKon6-P8tnSxgKgP-Bxxk7wUuN0KEqbx4'
 
+import Navbar from "./components/Navbar.jsx";
+
+import "./App.css";
+
+
+function App() {
   return (
+
     <div className="netflix-clone">
       {/* Series Component - Maneja todo internamente */}
       <Series />
@@ -24,6 +32,12 @@ function App() {
       )}
     </div>
   )
+
+    <>
+      <Navbar />
+    </>
+  );
+
 }
 
-export default App
+export default App;

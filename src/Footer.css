@@ -1,0 +1,59 @@
+/*REDES SOCIALES*/
+*{
+  margin: 0;
+  padding: 0%;
+  box-sizing: border-box;
+}
+
+.footer {
+    background-color: #E50914;
+    border-top:  2px solid red;
+    position: relative;
+    width: 100%;
+    bottom: 0;
+    color: white;
+    font-size: 16px;
+    padding: 25px;
+}
+
+.container {
+  width: 100%;
+  background: #d81f26;
+}
+
+.box-redes-sociales a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.box-redes-sociales {
+  display: flex;
+  justify-content: space-between;
+  width: 175px;
+  font-size: 20px;
+  margin-bottom: 5%;
+
+}
+
+.social {
+  display: flex;
+  text-align: center;
+}
+
+.box-redes-sociales a:hover {
+  opacity: 0.8;
+  color: #221f1f;
+}
+
+/*MÁS INFORMACIÓN*/
+
+
+.App {
+    color: #228b22;
+    text-align: left;
+    margin: 0%;
+}
+
+
