@@ -1,3 +1,4 @@
+
 * {
   margin: 0;
   padding: 0;
@@ -159,8 +160,8 @@ body {
   display: flex;
   align-items: center;
   margin-bottom: 40px;
-  width: 100vw; /* Ancho completo de la ventana */
-  margin-left: calc(-50vw + 50%); /* Centra y extiende al borde */
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
   margin-right: calc(-50vw + 50%);
 }
 
@@ -170,7 +171,7 @@ body {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 80px; /* Más ancho para cubrir mejor */
+  width: 80px;
   z-index: 5;
   pointer-events: none;
 }
@@ -187,10 +188,10 @@ body {
 
 .video-carousel {
   display: flex;
-  gap: 15px; /* Gap reducido para más cards visibles */
+  gap: 15px;
   overflow-x: hidden;
   scroll-behavior: smooth;
-  padding: 15px 80px; /* Padding para los gradientes */
+  padding: 15px 80px;
   flex: 1;
 }
 
@@ -247,9 +248,9 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   border: 2px solid transparent;
-  width: 320px; /* Ancho fijo */
-  height: 240px; /* Alto fijo */
-  flex-shrink: 0; /* Evita que se compriman */
+  width: 320px;
+  height: 240px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
 }
@@ -311,34 +312,7 @@ body {
 .play-button span {
   color: white;
   font-size: 18px;
-  margin-left: 2px; /* Centrar visualmente el triángulo */
-}
-
-.video-info {
-  padding: 12px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.video-title {
-  font-size: 0.9rem;
-  font-weight: bold;
-  margin-bottom: 4px;
-  line-height: 1.3;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  height: 2.6em; /* Altura fija para 2 líneas */
-}
-
-.video-channel {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.7);
-  margin-top: auto;
+  margin-left: 2px;
 }
 
 .video-info {
@@ -565,171 +539,6 @@ body {
   color: rgba(255, 255, 255, 0.8);
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
-  .video-card {
-    width: 280px;
-    height: 220px;
-  }
-  
-  .video-thumbnail {
-    height: 140px;
-  }
-}
-
-@media (max-width: 768px) {
-  .header-content {
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .logo {
-    font-size: 1.5rem;
-  }
-  
-  .search-input {
-    min-width: 200px;
-  }
-  
-  .featured-title {
-    font-size: 2rem;
-  }
-  
-  .video-carousel {
-    padding: 15px 60px; /* Menos padding en tablets */
-  }
-  
-  .carousel-btn {
-    width: 45px;
-    height: 45px;
-  }
-  
-  .carousel-btn span {
-    font-size: 22px;
-  }
-  
-  .video-card {
-    width: 240px;
-    height: 200px;
-  }
-  
-  .video-thumbnail-container {
-    height: 120px;
-  }
-  
-  .play-button {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .play-button span {
-    font-size: 14px;
-  }
-  
-  .main-content {
-    padding: 0 15px;
-  }
-  
-  /* Modal responsive */
-  .modal-content {
-    margin: 10px;
-    max-width: calc(100vw - 20px);
-  }
-  
-  .modal-thumbnail-container {
-    height: 200px;
-  }
-  
-  .modal-details {
-    padding: 20px;
-  }
-  
-  .modal-title {
-    font-size: 1.4rem;
-  }
-  
-  .modal-play-button {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .modal-play-button span {
-    font-size: 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .search-form {
-    flex-direction: column;
-    width: 100%;
-  }
-  
-  .search-input {
-    min-width: 100%;
-  }
-  
-  .video-carousel {
-    padding: 15px 40px; /* Menos padding en móviles */
-  }
-  
-  .carousel-btn {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .carousel-btn span {
-    font-size: 20px;
-  }
-  
-  .video-card {
-    width: 200px;
-    height: 180px;
-  }
-  
-  .video-thumbnail-container {
-    height: 100px;
-  }
-  
-  .play-button {
-    width: 35px;
-    height: 35px;
-  }
-  
-  .play-button span {
-    font-size: 12px;
-  }
-  
-  .featured-title {
-    font-size: 1.5rem;
-  }
-  
-  /* Modal mobile */
-  .modal-overlay {
-    padding: 5px;
-  }
-  
-  .modal-thumbnail-container {
-    height: 150px;
-  }
-  
-  .modal-details {
-    padding: 15px;
-  }
-  
-  .modal-title {
-    font-size: 1.2rem;
-  }
-  
-  .modal-play-button {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .modal-play-button span {
-    font-size: 16px;
-  }
-}
-
 /* Reproductor en Pantalla Completa */
 .fullscreen-player {
   position: fixed;
@@ -780,4 +589,167 @@ body {
 .fullscreen-video-container iframe {
   width: 100vw !important;
   height: 100vh !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .video-card {
+    width: 280px;
+    height: 220px;
+  }
+  
+  .video-thumbnail-container {
+    height: 140px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .logo {
+    font-size: 1.5rem;
+  }
+  
+  .search-input {
+    min-width: 200px;
+  }
+  
+  .featured-title {
+    font-size: 2rem;
+  }
+  
+  .video-carousel {
+    padding: 15px 60px;
+  }
+  
+  .carousel-btn {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .carousel-btn span {
+    font-size: 22px;
+  }
+  
+  .video-card {
+    width: 240px;
+    height: 200px;
+  }
+  
+  .video-thumbnail-container {
+    height: 120px;
+  }
+  
+  .play-button {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .play-button span {
+    font-size: 14px;
+  }
+  
+  .main-content {
+    padding: 0 15px;
+  }
+  
+  .modal-content {
+    margin: 10px;
+    max-width: calc(100vw - 20px);
+  }
+  
+  .modal-thumbnail-container {
+    height: 200px;
+  }
+  
+  .modal-details {
+    padding: 20px;
+  }
+  
+  .modal-title {
+    font-size: 1.4rem;
+  }
+  
+  .modal-play-button {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .modal-play-button span {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-form {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .search-input {
+    min-width: 100%;
+  }
+  
+  .video-carousel {
+    padding: 15px 40px;
+  }
+  
+  .carousel-btn {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .carousel-btn span {
+    font-size: 20px;
+  }
+  
+  .video-card {
+    width: 200px;
+    height: 180px;
+  }
+  
+  .video-thumbnail-container {
+    height: 100px;
+  }
+  
+  .play-button {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .play-button span {
+    font-size: 12px;
+  }
+  
+  .featured-title {
+    font-size: 1.5rem;
+  }
+  
+  .modal-overlay {
+    padding: 5px;
+  }
+  
+  .modal-thumbnail-container {
+    height: 150px;
+  }
+  
+  .modal-details {
+    padding: 15px;
+  }
+  
+  .modal-title {
+    font-size: 1.2rem;
+  }
+  
+  .modal-play-button {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .modal-play-button span {
+    font-size: 16px;
+  }
 }
