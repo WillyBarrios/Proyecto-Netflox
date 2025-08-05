@@ -2,49 +2,6 @@ import { useState, useEffect } from "react";
 import netflixLogo from "../assets/netflix.svg";
 import { FaSearch, FaUserAstronaut, FaTimes, FaBars } from "react-icons/fa";
 
-// Componente para mostrar la lista de videos
-const VideoList = ({ videos }) => {
-  // Mensaje inicial si no hay videos y no se ha buscado nada.
-  if (!videos.length) {
-    return (
-      <div className="text-black text-center pt-12 text-2xl">
-        Busca tus películas y series favoritas...
-      </div>
-    );
-  }
-
-  return (
-    <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {videos.map((video) => (
-        <div
-          key={video.id.videoId}
-          className="bg-gray-900 rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300"
-        >
-          <a
-            href={`https://www.youtube.com/watch?v=${video.id.videoId}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src={video.snippet.thumbnails.medium.url}
-              alt={video.snippet.title}
-              className="w-full"
-            />
-            <div className="p-4">
-              <h3 className="text-white font-bold truncate">
-                {video.snippet.title}
-              </h3>
-              <p className="text-gray-400 text-sm">
-                {video.snippet.channelTitle}
-              </p>
-            </div>
-          </a>
-        </div>
-      ))}
-    </div>
-  );
-};
-
 // *Navbar items array  de objetos con texto y enlace
 const itemsnav = [
   { text: "Incio", href: "#" },
@@ -61,8 +18,6 @@ function Navbar() {
   const [query, setQuery] = useState("");
 
   // --- Lógica y estado de la búsqueda ---
-  const [videos, setVideos] = useState([]);
-  const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const API_KEY = "AIzaSyAKon6-P8tnSxgKgP-Bxxk7wUuN0KEqbx4"
 
@@ -82,7 +37,6 @@ function Navbar() {
     if (!query.trim()) return;
 
     setIsLoading(true);
-    setError(null);
     try {
       const response = await fetch(
         `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query.trim()}&key=${API_KEY}&maxResults=20&type=video`
@@ -92,13 +46,17 @@ function Navbar() {
         throw new Error(errorData.error.message || "Error al buscar videos");
       }
       const data = await response.json();
-      setVideos(data.items || []);
-      if (data.items.length === 0) {
-        setError("No se encontraron videos para tu búsqueda.");
-      }
+      console.log("Búsqueda realizada con éxito:", query.trim());
+      console.log("Resultados encontrados:", data.items?.length || 0);
+      
+      // Emitir evento personalizado para que Series.jsx pueda escucharlo
+      const searchEvent = new CustomEvent('navbarSearch', {
+        detail: { query: query.trim(), results: data.items }
+      });
+      window.dispatchEvent(searchEvent);
+      
     } catch (err) {
-      console.error(err);
-      setError(err.message);
+      console.error("Error en la búsqueda:", err.message);
     } finally {
       setIsLoading(false);
     }
@@ -231,7 +189,7 @@ function Navbar() {
         </div>
       )}
 
-      {/* --- Contenido Principal con los Resultados --- */}
+      {/* --- Contenido Principal --- */}
       <main className="pt-24">
         {" "}
         {/* Padding superior para que el contenido no quede debajo de la nav */}
@@ -240,10 +198,11 @@ function Navbar() {
             Buscando...
           </div>
         )}
-        {error && !isLoading && (
-          <div className="text-red-500 text-center pt-12 text-2xl">{error}</div>
+        {!isLoading && (
+          <div className="text-black text-center pt-12 text-2xl">
+            Busca tus películas y series favoritas...
+          </div>
         )}
-        {!isLoading && <VideoList videos={videos} />}
       </main>
     </>
   );

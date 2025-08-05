@@ -6,9 +6,10 @@ import "./Series.css";
 function Series() {
   const [series, setSeries] = useState([]);
   const [featuredSeries, setFeaturedSeries] = useState(null);
-  const [currentSearchTerm] = useState('netflix series');
+  const [currentSearchTerm, setCurrentSearchTerm] = useState('netflix series');
   const [loading, setLoading] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
   
   // Estados para el modal de más información
   const [modalVideo, setModalVideo] = useState(null);
@@ -54,12 +55,62 @@ function Series() {
     }
   };
 
+  // Función para obtener resultados de búsqueda desde el navbar
+  const fetchSearchResults = async (query) => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query.trim()}&key=${API_KEY}&maxResults=20&type=video`
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error.message || "Error al buscar videos");
+      }
+      const data = await response.json();
+      console.log("Resultados de búsqueda recibidos en Series.jsx:", data.items);
+      
+      // Actualizar los resultados de búsqueda
+      setSearchResults(data.items || []);
+      setSeries(data.items || []);
+      
+      if (data.items && data.items.length > 0) {
+        setFeaturedSeries(data.items[0]);
+      }
+      
+      console.log("Series.jsx - Búsqueda completada:", query);
+      console.log("Series.jsx - Número de resultados:", data.items?.length || 0);
+      
+    } catch (err) {
+      console.error("Error en Series.jsx al obtener resultados:", err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     // Cargar series al inicializar el componente
     if (API_KEY && API_KEY !== 'TU_API_KEY_AQUI') {
       fetchSeries(currentSearchTerm);
     }
-  }, []);
+  }, [currentSearchTerm]);
+
+  // useEffect para escuchar eventos de búsqueda desde el navbar
+  useEffect(() => {
+    const handleSearchEvent = (event) => {
+      const { query } = event.detail;
+      console.log("Series.jsx - Evento de búsqueda recibido:", query);
+      setCurrentSearchTerm(query);
+      fetchSearchResults(query);
+    };
+
+    // Escuchar el evento personalizado de búsqueda
+    window.addEventListener('navbarSearch', handleSearchEvent);
+
+    // Cleanup del event listener
+    return () => {
+      window.removeEventListener('navbarSearch', handleSearchEvent);
+    };
+  }, []); // Solo se ejecuta una vez al montar el componente
 
   // Función para obtener estadísticas del video
   const fetchVideoStats = async (videoId) => {
