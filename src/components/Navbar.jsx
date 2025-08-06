@@ -5,8 +5,6 @@ import { FaSearch, FaUserAstronaut, FaTimes } from "react-icons/fa";
 // *Navbar items array  de objetos con texto y enlace
 const itemsnav = [
   { text: "Incio", href: "#" },
-  { text: "Peliculas", href: "#about" },
-  { text: "Series", href: "#contact" },
 ];
 // *Navbar componente
 function Navbar() {
@@ -16,7 +14,7 @@ function Navbar() {
   const [query, setQuery] = useState("");
 
   // --- Lógica y estado de la búsqueda ---
-  const [ setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const API_KEY = "AIzaSyAGy5yIve5DxKf2uV2vOwIm7sXQZIrX69c"
 
   // *Función para alternar la visibilidad de la barra de búsqueda
@@ -77,7 +75,7 @@ function Navbar() {
         {/* Lado izquierdo: Logo y enlaces de navegación */}
         <div className="flex items-center">
           <a href="#" className="flex items-center mr-20">
-            <img className="h-8" src={netflixLogo} alt="Netflix Logo" />
+            <img className="h-25" src={netflixLogo} alt="Netflix Logo" />
           </a>
           <ul className="flex text-sm font-medium">
             {itemsnav.map((item) => (
@@ -111,8 +109,13 @@ function Navbar() {
                 type="submit"
                 aria-label="Buscar"
                 className="p-2 hover:text-gray-300"
+                disabled={isLoading}
               >
-                <FaSearch size={16} />
+                {isLoading ? (
+                  <span className="animate-spin">⏳</span>
+                ) : (
+                  <FaSearch size={16} />
+                )}
               </button>
               <button
                 type="button"
