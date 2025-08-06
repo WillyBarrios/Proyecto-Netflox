@@ -16,7 +16,7 @@ function Navbar() {
   const [query, setQuery] = useState("");
 
   // --- Lógica y estado de la búsqueda ---
-  const [isLoading, setIsLoading] = useState(false);
+  const [ setIsLoading] = useState(false);
   const API_KEY = "AIzaSyAGy5yIve5DxKf2uV2vOwIm7sXQZIrX69c"
 
   // *Función para alternar la visibilidad de la barra de búsqueda
